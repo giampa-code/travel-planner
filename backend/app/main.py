@@ -1,8 +1,17 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from app.routes import ryanair, users
 
 app = FastAPI()
 
+# Configurar CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["https://super-potato-rw76jxp775w3pv-5173.app.github.dev"],  # Permitir el origen del frontend
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 #Registrar routers
 app.include_router(ryanair.router)
