@@ -1,12 +1,13 @@
 from fastapi import APIRouter
 import requests
 import json
+from typing import Optional
 #import pandas as pd
 
 router = APIRouter(prefix="/api/ryanair", tags=["Ryanair"]) # Todos los endpoints de este router comienzan con /ryanair
 
-@router.get("/list_rutes_from_airport_path/{airport_from}")
-def list_rutes_from_airport_path(airport_from: str):
+@router.get("/list_rutes_from_airport_path/{rutes_from_airport}")
+def list_rutes_from_airport_path(rutes_from_airport: str):
     """
     Obtiene rutas desde un aeropuerto de Ryanair usando el endpoint
     /api/views/locate/searchWidget/routes/{market}/airport/{airport_code}
@@ -15,7 +16,7 @@ def list_rutes_from_airport_path(airport_from: str):
     market= "en"
     base_url = "https://www.ryanair.com/api/views/locate/searchWidget/routes"
     # Construimos la URL
-    url = f"{base_url}/{market}/airport/{airport_from}"
+    url = f"{base_url}/{market}/airport/{rutes_from_airport}"
     # Hacemos la petición GET
     headers = {
     "Accept": "application/json, text/plain, */*",
@@ -31,16 +32,18 @@ def list_rutes_from_airport_path(airport_from: str):
     return list_airports_to
 
 @router.get("/list_rutes_from_airport_query")
-def list_rutes_from_airport_query(airport_from: str):
+def list_rutes_from_airport_query(rutes_from_airport: Optional[str] = None):
     """
     Obtiene rutas desde un aeropuerto de Ryanair usando el endpoint
     /api/views/locate/searchWidget/routes/{market}/airport/{airport_code}
     """
-
+    if rutes_from_airport is None:
+        return ["Debe proporcionar un código de aeropuerto como parámetro de consulta."]
+    
     market= "en"
     base_url = "https://www.ryanair.com/api/views/locate/searchWidget/routes"
     # Construimos la URL
-    url = f"{base_url}/{market}/airport/{airport_from}"
+    url = f"{base_url}/{market}/airport/{rutes_from_airport}"
     # Hacemos la petición GET
     headers = {
     "Accept": "application/json, text/plain, */*",

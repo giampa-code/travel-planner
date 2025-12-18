@@ -7,7 +7,7 @@ import { useEffect, useState } from "react"
 function App() {
 
   //defino estado aeropuerto
-  const [airport_from, setAirportFrom] = useState("")
+  const [rutes_from_airport, setAirportFrom] = useState("")
   //solo para el contador
   const [count, setCount] = useState(0);
 
@@ -20,8 +20,8 @@ function App() {
       "https://super-potato-rw76jxp775w3pv-8000.app.github.dev/api/ryanair/list_rutes_from_airport_query"
     )
 
-    if (airport_from) {
-      url.searchParams.append("airport_from", airport_from)
+    if (rutes_from_airport) {
+      url.searchParams.append("rutes_from_airport", rutes_from_airport)
     }
 
     const response = await fetch(url)
@@ -61,12 +61,13 @@ function App() {
         <input
           type="text"
           placeholder="Nombre"
-          value={airport_from}
+          value={rutes_from_airport}
           onChange={(e) => setAirportFrom(e.target.value)}
         />
 
         <button type="submit">Buscar</button>
       </form>
+
         <h2>Rutas:</h2>
         <ul>
           {airports_to.map((airport, index) => (    
@@ -74,8 +75,6 @@ function App() {
           ))}
         </ul>
       </div>
-
-
 
     </div>
   )

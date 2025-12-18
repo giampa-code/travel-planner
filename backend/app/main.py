@@ -25,7 +25,5 @@ def root():
 def health():
     return {"status": "ok"}
 
-@app.get("/api/cities")
-def get_cities():
-    return {"status": "ok"}
+
 
