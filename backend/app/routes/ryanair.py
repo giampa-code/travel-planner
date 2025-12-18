@@ -54,6 +54,6 @@ def list_rutes_from_airport_query(rutes_from_airport: Optional[str] = None):
     if response.status_code != 200:
         raise Exception(f"Error al llamar Ryanair API: status {response.status_code}, {response.text}")
     data = response.json()
-    list_airports_to = [route['arrivalAirport']['name'] for route in data]
+    list_airports_to = sorted([route['arrivalAirport']['name'] for route in data])
     
     return list_airports_to
