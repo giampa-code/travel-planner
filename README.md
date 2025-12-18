@@ -7,7 +7,9 @@ Proyecto de práctica con React + FastAPI usando GitHub Codespaces
 # Resumen
 ## Git
 git add .
+
 git commit -m "Initial project setup"
+
 git push
 
 ## Python
