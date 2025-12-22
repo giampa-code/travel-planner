@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routes import ryanair, users
+from app.routes import routes, users
 
 app = FastAPI()
 
@@ -14,8 +14,9 @@ app.add_middleware(
 )
 
 #Registrar routers
-app.include_router(ryanair.router)
+app.include_router(routes.router)
 app.include_router(users.router)
+
 
 @app.get("/")
 def root():

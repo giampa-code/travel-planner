@@ -1,42 +1,31 @@
-
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
-import { useEffect, useState } from "react"
+import { useState } from "react"
+import { getRoutesFromAirport } from "./services/api"
+import AirportForm from "./components/AirportForm"
+import RoutesList from "./components/RoutesList"
 
 function App() {
 
-  //defino estado aeropuerto
-  const [rutes_from_airport, setAirportFrom] = useState("")
-  //solo para el contador
-  const [count, setCount] = useState(0);
+  const [count, setCount] = useState(0)
+  const [destinations, setDestinations] = useState([])
+  const [error, setError] = useState(null)
+  const [loading, setLoading] = useState(false)
 
-  const [airports_to, setAirportsTo] = useState([]);
+  const loadRoutes = async (airport) => {
+    try {
+      setLoading(true)
+      setError(null)
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-
-  const url = new URL(
-      "https://super-potato-rw76jxp775w3pv-8000.app.github.dev/api/ryanair/list_rutes_from_airport_query"
-    )
-
-    if (rutes_from_airport) {
-      url.searchParams.append("rutes_from_airport", rutes_from_airport)
+      const data = await getRoutesFromAirport(airport)
+      setDestinations(data.destinations)
+    } catch (err) {
+      setError(err.message)
+      setDestinations([])
+    } finally {
+      setLoading(false)
     }
-
-    const response = await fetch(url)
-    const data = await response.json()
-    setAirportsTo(data)
   }
-  
 
-  /*
-  useEffect(() => {
-    fetch("https://super-potato-rw76jxp775w3pv-8000.app.github.dev/api/ryanair/list_rutes_from_airport_query/")
-      .then(res => res.json())
-      .then(data => setAirportsTo(data));
-  }, []);
-  */
    
 
   return (
@@ -44,7 +33,7 @@ function App() {
       <h1>Travel Planner</h1>
       <p>Frontend funcionando 🚀</p>
 
-      <div>
+      <div className="counter-section">
         <p>Contador: {count}</p>
         <button onClick={() => setCount((count + 1) * 2)}>
           Incrementar
@@ -54,26 +43,17 @@ function App() {
         </button>
       </div>
 
-      <div>
+      <div className="search-section">
         <h1>Buscar rutas desde aeropuerto</h1>
 
-        <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="Nombre"
-          value={rutes_from_airport}
-          onChange={(e) => setAirportFrom(e.target.value)}
-        />
+        <AirportForm onSearch={loadRoutes} />
 
-        <button type="submit">Buscar</button>
-      </form>
+          {loading && <p>Cargando...</p>}
+          {error && <p style={{ color: "red" }}>{error}</p>}
 
         <h2>Rutas:</h2>
-        <ul>
-          {airports_to.map((airport, index) => (    
-            <li key={index}>{airport}</li>
-          ))}
-        </ul>
+
+        <RoutesList destinations={destinations} />
       </div>
 
     </div>
