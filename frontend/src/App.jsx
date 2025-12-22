@@ -1,8 +1,9 @@
 import './App.css'
-import { useState } from "react"
+import { useState, useRef } from "react"
 import { getRoutesFromAirport } from "./services/api"
 import AirportForm from "./components/AirportForm"
 import RoutesList from "./components/RoutesList"
+import ErrorMessage from "./components/ErrorMessage"
 
 function App() {
 
@@ -10,14 +11,23 @@ function App() {
   const [destinations, setDestinations] = useState([])
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
+  const cache = useRef({})
 
   const loadRoutes = async (airport) => {
+    if (cache.current[airport]) {
+      console.log("📦 Usando cache para:", airport)
+      setDestinations(cache.current[airport])
+      return
+    }
+    console.log("🌐 Llamando al backend para:", airport)
     try {
       setLoading(true)
       setError(null)
 
       const data = await getRoutesFromAirport(airport)
+      cache.current[airport] = data.destinations
       setDestinations(data.destinations)
+      
     } catch (err) {
       setError(err.message)
       setDestinations([])
@@ -49,7 +59,7 @@ function App() {
         <AirportForm onSearch={loadRoutes} />
 
           {loading && <p>Cargando...</p>}
-          {error && <p style={{ color: "red" }}>{error}</p>}
+          <ErrorMessage message={error} />
 
         <h2>Rutas:</h2>
 
