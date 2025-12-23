@@ -4,6 +4,7 @@ import { getRoutesFromAirport } from "./services/api"
 import AirportForm from "./components/AirportForm"
 import RoutesList from "./components/RoutesList"
 import ErrorMessage from "./components/ErrorMessage"
+import Spinner from "./components/Spinner"
 
 /**
  * Main App component for the Travel Planner frontend.
@@ -75,9 +76,10 @@ function App() {
       <div className="search-section">
         <h1>Buscar rutas desde aeropuerto</h1>
 
-        <AirportForm onSearch={loadRoutes} />
+        <AirportForm onSearch={loadRoutes} disabled={loading}/>
 
-        {loading && <p>Cargando...</p>}
+        {loading && <Spinner />}
+
         <ErrorMessage message={error} />
 
         <h2>Rutas:</h2>

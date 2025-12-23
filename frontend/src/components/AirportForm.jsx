@@ -5,11 +5,11 @@ import { AIRPORTS } from "../data/airports"
  * AirportForm component for searching flight routes.
  *
  * Provides an input field with autocomplete suggestions for airport codes,
- * validates input, and triggers search on submission.
+ * validates input,  triggers search on submissions and is disabled while loading.
  *
  * @param {function} onSearch - Callback function to handle search with airport code.
  */
-export default function AirportForm({ onSearch }) {
+export default function AirportForm({ onSearch , disabled}) {
   const [airport, setAirport] = useState("")
   const [error, setError] = useState(null)
   const [showSuggestions, setShowSuggestions] = useState(false)
@@ -85,7 +85,7 @@ export default function AirportForm({ onSearch }) {
           maxLength={3}
           style={{ width: "100%" }}
         />
-        <button type="submit">Buscar rutas</button>
+        <button type="submit" disabled={disabled}>Buscar rutas</button>
       </form>
 
       {/* Autocomplete suggestions dropdown */}
