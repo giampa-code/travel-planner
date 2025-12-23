@@ -1,11 +1,24 @@
 import { useState } from "react"
 import { AIRPORTS } from "../data/airports"
 
+/**
+ * AirportForm component for searching flight routes.
+ *
+ * Provides an input field with autocomplete suggestions for airport codes,
+ * validates input, and triggers search on submission.
+ *
+ * @param {function} onSearch - Callback function to handle search with airport code.
+ */
 export default function AirportForm({ onSearch }) {
   const [airport, setAirport] = useState("")
   const [error, setError] = useState(null)
   const [showSuggestions, setShowSuggestions] = useState(false)
 
+  /**
+   * Validates the airport code input.
+   *
+   * @returns {string|null} Error message if invalid, null if valid.
+   */
   const validate = () => {
     if (!airport) return "El código es obligatorio"
     if (!/^[A-Za-z]{3}$/.test(airport)) {
@@ -14,6 +27,12 @@ export default function AirportForm({ onSearch }) {
     return null
   }
 
+  /**
+   * Handles form submission.
+   * Validates input and calls onSearch if valid.
+   *
+   * @param {Event} e - Form submit event.
+   */
   const handleSubmit = (e) => {
     e.preventDefault()
 
@@ -28,16 +47,27 @@ export default function AirportForm({ onSearch }) {
     onSearch(airport.toUpperCase())
   }
 
+  /**
+   * Handles input change and shows suggestions.
+   *
+   * @param {string} value - New input value.
+   */
   const handleChange = (value) => {
     setAirport(value)
     setShowSuggestions(value.length > 0)
   }
 
+  /**
+   * Handles selection from suggestions dropdown.
+   *
+   * @param {string} code - Selected airport code.
+   */
   const handleSelect = (code) => {
     setAirport(code)
     setShowSuggestions(false)
   }
 
+  // Filter and limit suggestions based on input
   const suggestions =
     showSuggestions
       ? AIRPORTS
@@ -58,6 +88,7 @@ export default function AirportForm({ onSearch }) {
         <button type="submit">Buscar rutas</button>
       </form>
 
+      {/* Autocomplete suggestions dropdown */}
       {suggestions.length > 0 && (
         <ul
           style={{
@@ -87,6 +118,7 @@ export default function AirportForm({ onSearch }) {
         </ul>
       )}
 
+      {/* Error message display */}
       {error && <p style={{ color: "red" }}>{error}</p>}
     </div>
   )

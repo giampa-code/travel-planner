@@ -1,4 +1,10 @@
 
+/**
+ * List of IATA airport codes for autocomplete suggestions.
+ *
+ * This array contains common European airport codes used for flight route searches.
+ * Each code is accompanied by a comment indicating the city or airport name.
+ */
 export const AIRPORTS = [
   "MAD", // Madrid
   "BCN", // Barcelona

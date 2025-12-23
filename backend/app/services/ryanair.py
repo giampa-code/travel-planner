@@ -1,7 +1,26 @@
+"""
+Service module for interacting with Ryanair API.
+
+This module provides functions to fetch flight route data from Ryanair's public API.
+"""
+
 import requests
 
+
 def get_routes_from_airport(airport_code: str) -> list[str]:
-    market = "en"
+    """
+    Fetch and return a list of destination airports from a given departure airport using Ryanair API.
+
+    Args:
+        airport_code (str): The IATA code of the departure airport.
+
+    Returns:
+        list[str]: A sorted list of destination airport names.
+
+    Raises:
+        RuntimeError: If the API request fails.
+    """
+    market = "en"  # Market code for English language
     base_url = "https://www.ryanair.com/api/views/locate/searchWidget/routes"
     url = f"{base_url}/{market}/airport/{airport_code}"
 
@@ -10,6 +29,7 @@ def get_routes_from_airport(airport_code: str) -> list[str]:
         "User-Agent": "python-requests/2.x"
     }
 
+    # Make GET request to Ryanair API
     response = requests.get(url, headers=headers, timeout=10)
 
     if response.status_code != 200:
@@ -18,5 +38,6 @@ def get_routes_from_airport(airport_code: str) -> list[str]:
         )
 
     data = response.json()
+    # Extract and sort destination airport names
     list_airports_to = sorted([route["arrivalAirport"]["name"] for route in data])
     return list_airports_to
