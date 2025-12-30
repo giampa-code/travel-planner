@@ -12,7 +12,7 @@ from threading import Lock
 
 CACHE = {}
 LOCKS = {}
-CACHE_TTL_SECONDS = 1 * 60  # 60 minutes
+CACHE_TTL_SECONDS = 1 * 10 * 60  # 10 minutes
 
 
 def get_routes_from_airport(airport_code: str) -> list[str]:
