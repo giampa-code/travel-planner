@@ -11,10 +11,6 @@ import CounterPage from "./pages/Counter"
  * Main App component for the Travel Planner frontend.
  */
 function App() {
-  // State for a simple counter (demo feature)
-  const [count, setCount] = useState(0)
-
-
 
   return (
   

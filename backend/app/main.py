@@ -16,10 +16,15 @@ app = FastAPI(
     version="1.0.0"
 )
 
+# Allowed origins (frontend URLs)
+origins = [
+    "*",  # Allow all origins
+]
+
 # Configure CORS middleware to allow requests from the frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://super-potato-rw76jxp775w3pv-5173.app.github.dev"],  # Allow frontend origin
+    allow_origins= origins,  # Allow frontend origins
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
