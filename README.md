@@ -47,5 +47,13 @@ npm install
 
 npm run dev
 
+## Docker / Redis
+docker compose up -d                    #levantar redis
+docker ps                               #verificar redis
+docker exec -it redis-cache redis-cli   #probar redis manualmente -> PING ->PONG
+
+En la carpeta del backend:
+pip install redis
+
 ## Puertos
 Por default CodeSpaces configura los puertos en privado, por lo que hay que cambiarlos a públicos en la pestania de puertos

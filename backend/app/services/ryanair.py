@@ -3,15 +3,15 @@ Service module for interacting with Ryanair API.
 
 This module provides functions to fetch flight route data from Ryanair's public API.
 
-In-memory cache, with a TTL of 60 minutes, is used to minimize redundant API calls.
+Redis cache, with a TTL of 60 minutes, is used to minimize redundant API calls.
 """
 
-import time
+import json
 import requests
 from threading import Lock
+from app.core.redis import redis_client
 
-CACHE = {}
-LOCKS = {}
+
 CACHE_TTL_SECONDS = 1 * 10 * 60  # 10 minutes
 
 
@@ -28,20 +28,14 @@ def get_routes_from_airport(airport_code: str) -> list[str]:
     Raises:
         RuntimeError: If the API request fails.
     """
-    now = time.time()
 
-    # Check cache
-    if airport_code in CACHE:
-        cached_entry = CACHE[airport_code]
-        cache_age = now - cached_entry["timestamp"]
+    cache_key = f"routes:{airport_code}"
 
-        if cache_age < CACHE_TTL_SECONDS:
-            print(f"Using cached data for {airport_code}")
-            return cached_entry["data"]
-
-        # Cache expired
-        print(f"Cache expired for {airport_code}")
-        del CACHE[airport_code]
+    # Try Redis cache
+    cached_data = redis_client.get(cache_key)
+    if cached_data:
+            print(f"Using Redis cache for {airport_code}")
+            return json.loads(cached_data)
 
     # Call external API
     print(f"Calling Ryanair API for {airport_code}") 
@@ -66,13 +60,13 @@ def get_routes_from_airport(airport_code: str) -> list[str]:
 
     data = response.json()
     # Extract and sort destination airport names
-    list_airports_to = sorted([route["arrivalAirport"]["name"] for route in data])
+    destinations = sorted([route["arrivalAirport"]["name"] for route in data])
 
-    # Update cache with timestamp
-    CACHE[airport_code] = {
+    # Store result in Redis with TTL
+    redis_client.setex(
+        cache_key,
+        CACHE_TTL_SECONDS,
+        json.dumps(destinations)
+    )
 
-        "data": list_airports_to,
-        "timestamp": now
-    }
-
-    return list_airports_to
+    return destinations

@@ -17,8 +17,7 @@ function App() {
 
 
   return (
-    <div>
-      
+  
       <div className="app-container">
         <nav style={{ marginBottom: "20px" }}>
           <Link to="/">Home</Link> |{" "}
@@ -35,8 +34,6 @@ function App() {
         </Routes>
       </div>
 
-
-    </div>
   )
 }
 
